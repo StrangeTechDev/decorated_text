@@ -1,8 +1,6 @@
 /// A package to decorate your text easily.
 library decorated_text;
 
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 
 /// A Widget to decorate your text.
@@ -10,83 +8,9 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// DecoratedText(
 ///   'Decorated Text',
-///   borderColor: Colors.amber,
-///   borderWidth: 3,
-///   fontSize: 40,
-///   fontWeight: FontWeight.w800,
-///   shadows: [
-///     Shadow(
-///         color: Colors.black, blurRadius: 4, offset: Offset(4, 4))
-///   ],
-///   fillGradient: LinearGradient(colors: [Colors.blue, Colors.red]),
-/// )
-/// ```
-class DecoratedText extends StatelessWidget {
-  const DecoratedText(
-    this.text, {
-    this.fontSize,
-    this.borderWidth,
-    this.fillGradient,
-    this.fillColor,
-    this.fontWeight,
-    this.borderColor,
-    this.shadows,
-  });
-
-  /// Your text to be decorated.
-  final String text;
-
-  /// Font size.
-  final double fontSize;
-
-  /// Border width.
-  final double borderWidth;
-
-  /// Gradient to fill your text. Don't set this with fillColor.
-  final Gradient fillGradient;
-
-  /// Color to fill your text. Don't set this with fillGradient.
-  final Color fillColor;
-
-  /// Font weight.
-  final FontWeight fontWeight;
-
-  /// Border color.
-  final Color borderColor;
-
-  /// Shadows.
-  final List<Shadow> shadows;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedGoogleFontText(
-      text,
-      fontMethod: _defaultFontMethod,
-      fontSize: fontSize,
-      borderWidth: borderWidth,
-      fillGradient: fillGradient,
-      fillColor: fillColor,
-      fontWeight: fontWeight,
-      borderColor: borderColor,
-      shadows: shadows,
-    );
-  }
-}
-
-/// A Widget to decorate your text with Google Fonts.
-///
-/// ```dart
-/// DecoratedGoogleFontText(
-///   'Decorated Google Font',
-///   fontMethod: GoogleFonts.rancho, // NG: GoogleFonts.rancho()
-///   fontSize: 40,
-///   fontWeight: FontWeight.w800,
+///   style: TextStyle( ... )
 ///   borderWidth: 1.5,
 ///   borderColor: Colors.yellow[800],
-///   shadows: const [
-///     Shadow(
-///         color: Colors.black, blurRadius: 4, offset: Offset(4, 4))
-///   ],
 ///   fillGradient: LinearGradient(
 ///     begin: Alignment.topCenter,
 ///     end: Alignment.bottomCenter,
@@ -100,94 +24,84 @@ class DecoratedText extends StatelessWidget {
 ///   ),
 /// )
 /// ```
-class DecoratedGoogleFontText extends StatelessWidget {
-  const DecoratedGoogleFontText(
+class DecoratedText extends StatelessWidget {
+  const DecoratedText(
     this.text, {
-    @required this.fontMethod,
-    this.fontSize,
-    this.borderWidth,
+    this.style = const TextStyle(
+      color: Colors.black,
+    ),
+    this.borderWidth = 2,
     this.fillGradient,
     this.fillColor,
-    this.fontWeight,
-    this.borderColor,
-    this.shadows,
+    this.borderColor = Colors.black,
   });
 
-  /// Pass the static method of the google_fonts package.
-  /// Do not write "()".
-  final GoogleFontStaticMethod fontMethod;
+  static const double defaultFontSize = 20;
+  static const FontWeight defaultFontWeight = FontWeight.w500;
+
+  final TextStyle? style;
 
   /// Your text to be decorated.
   final String text;
-
-  /// Font size.
-  final double fontSize;
 
   /// Border width.
   final double borderWidth;
 
   /// Gradient to fill your text. Don't set this with fillColor.
-  final Gradient fillGradient;
+  final Gradient? fillGradient;
 
   /// Color to fill your text. Don't set this with fillGradient.
-  final Color fillColor;
-
-  /// Font weight.
-  final FontWeight fontWeight;
+  final Color? fillColor;
 
   /// Border color.
   final Color borderColor;
-
-  /// Shadows.
-  final List<Shadow> shadows;
 
   @override
   Widget build(BuildContext context) {
     if (fillColor != null && fillGradient != null) {
       throw StateError('You cannot set both fillColor and fillGradient.');
     }
+    var textStyle = style ??
+        TextStyle(
+          fontWeight: defaultFontWeight,
+          fontSize: defaultFontSize,
+        );
 
     return Stack(
       children: [
-        if (borderWidth != null)
+        if (borderWidth > 0)
           // Some fonts overflow the bound, so padding is added to paint it.
           Padding(
-            padding:
-                EdgeInsets.only(right: fontSize != null ? fontSize / 2 : 10),
+            padding: EdgeInsets.only(right: textStyle.fontSize! / 2),
             child: Text(
               text,
-              style: fontMethod(
-                  fontWeight: fontWeight ?? FontWeight.w500,
-                  fontSize: fontSize ?? 20,
-                  shadows: shadows,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    // Double the thickness beforehand, as the inner half will be filled in and disappear.
-                    ..strokeWidth = borderWidth * 2
-                    ..color = borderColor ?? Colors.black),
+              style: textStyle.copyWith(
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  // Double the thickness beforehand, as the inner half will be filled in and disappear.
+                  ..strokeWidth = borderWidth * 2
+                  ..color = borderColor,
+              ),
             ),
           ),
         ShaderMask(
           blendMode: BlendMode.srcATop,
           shaderCallback: (bound) {
             if (fillGradient != null) {
-              return fillGradient.createShader(bound.expandToInclude(bound));
+              return fillGradient!.createShader(bound.expandToInclude(bound));
             } else {
-              return LinearGradient(colors: [fillColor, fillColor])
+              return LinearGradient(colors: [fillColor!, fillColor!])
                   .createShader(Rect.zero);
             }
           },
           // Some fonts overflow the bound, so padding is added to paint it.
           child: Padding(
-            padding:
-                EdgeInsets.only(right: fontSize != null ? fontSize / 2 : 10),
+            padding: EdgeInsets.only(right: textStyle.fontSize! / 2),
             child: Text(
               text,
-              style: fontMethod(
+              style: textStyle.copyWith(
                 // Default text color is not complete black, so it's necessary to fill with true black.
                 color: Colors.black,
-                fontWeight: fontWeight ?? FontWeight.w500,
-                fontSize: fontSize ?? 20,
               ),
             ),
           ),
@@ -198,7 +112,7 @@ class DecoratedGoogleFontText extends StatelessWidget {
 }
 
 /// A type that represents the static methods of the google_fonts package.
-typedef GoogleFontStaticMethod = TextStyle Function(
+/*typedef GoogleFontStaticMethod = TextStyle Function(
     {TextStyle textStyle,
     Color color,
     Color backgroundColor,
@@ -260,4 +174,4 @@ TextStyle _defaultFontMethod(
     decorationStyle: decorationStyle,
     decorationThickness: decorationThickness,
   );
-}
+}*/

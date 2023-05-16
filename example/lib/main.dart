@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:decorated_text/decorated_text.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,8 +21,10 @@ class MyApp extends StatelessWidget {
             children: [
               DecoratedText(
                 'Decorated Text',
-                fontSize: 40,
-                fontWeight: FontWeight.w600,
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w600,
+                ),
                 fillColor: Colors.teal,
                 borderWidth: 1,
               ),
@@ -31,34 +32,41 @@ class MyApp extends StatelessWidget {
                 'Decorated Text',
                 borderColor: Colors.amber,
                 borderWidth: 3,
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
-                shadows: [
-                  Shadow(
-                      color: Colors.black, blurRadius: 4, offset: Offset(4, 4))
-                ],
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w600,
+                  shadows: [
+                    Shadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                        offset: Offset(4, 4))
+                  ],
+                ),
                 fillGradient: LinearGradient(colors: [Colors.blue, Colors.red]),
               ),
-              DecoratedGoogleFontText(
-                'Decorated Google Font',
-                fontMethod: GoogleFonts.rancho,
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
+              DecoratedText(
+                'Decorated Text',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w600,
+                  shadows: [
+                    Shadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                        offset: Offset(4, 4))
+                  ],
+                ),
                 borderWidth: 1.5,
-                borderColor: Colors.yellow[800],
-                shadows: const [
-                  Shadow(
-                      color: Colors.black, blurRadius: 4, offset: Offset(4, 4))
-                ],
+                borderColor: Colors.yellow[800]!,
                 fillGradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   stops: const [0.2, 0.55, 0.55, 0.75],
                   colors: [
                     Colors.white,
-                    Colors.yellow[500],
-                    Colors.yellow[800],
-                    Colors.yellow[500]
+                    Colors.yellow[500]!,
+                    Colors.yellow[800]!,
+                    Colors.yellow[500]!,
                   ],
                 ),
               )
