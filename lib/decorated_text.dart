@@ -102,6 +102,7 @@ class DecoratedText extends StatelessWidget {
               style: textStyle.copyWith(
                 // Default text color is not complete black, so it's necessary to fill with true black.
                 color: Colors.black,
+                shadows: List.empty(),
               ),
             ),
           ),
