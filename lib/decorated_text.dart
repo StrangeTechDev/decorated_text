@@ -72,7 +72,7 @@ class DecoratedText extends StatelessWidget {
         if (borderWidth > 0)
           // Some fonts overflow the bound, so padding is added to paint it.
           Padding(
-            padding: EdgeInsets.only(right: textStyle.fontSize! / 2),
+            padding: EdgeInsets.only(right: 0), //textStyle.fontSize! / 2),
             child: Text(
               text,
               style: textStyle.copyWith(
@@ -96,7 +96,7 @@ class DecoratedText extends StatelessWidget {
           },
           // Some fonts overflow the bound, so padding is added to paint it.
           child: Padding(
-            padding: EdgeInsets.only(right: textStyle.fontSize! / 2),
+            padding: EdgeInsets.only(right: 0), //textStyle.fontSize! / 2),
             child: Text(
               text,
               style: textStyle.copyWith(
